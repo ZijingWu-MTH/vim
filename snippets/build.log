@@ -1,0 +1,6 @@
+1>------ Build started: Project: channels, Configuration: Release Win32 ------
+1>  channels.vcxproj -> d:\Code\CMAD2\mp\Release\channels.lib
+2>------ Build started: Project: srtp, Configuration: Release Win32 ------
+2>  srtp7.vcxproj -> d:\Code\CMAD2\mp\Release\srtp.lib
+========== Build: 2 succeeded, 0 failed, 15 up-to-date, 0 skipped ==========
+

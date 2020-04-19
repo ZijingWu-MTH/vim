@@ -1,0 +1,193 @@
+# main()
+snippet main
+	#include <iostream>
+	#include <vector>
+	#include <algorithm>
+	int main(int argc, const char *argv[])
+	{
+		${1}
+		return 0;
+	}
+# #include <...>
+# let auoto complete repair the double "
+snippet inc"
+	#include "${1:stdio}.h${2}
+snippet inc<
+	#include <${1:stdio}.h>${2}
+# #include "..."
+snippet Inc
+	#include "${1:`Filename("$1.h")`}"${2}
+# #ifndef ... #define ... #endif
+snippet Def
+	#ifndef $1
+	#define ${1:SYMBOL} ${2:value}
+	#endif${3}
+snippet def
+	#define 
+snippet ifdef
+	#ifdef ${1:FOO}
+		${2:#define }
+	#endif
+snippet #if
+	#if ${1:FOO}
+		${2}
+	#endif
+# Header Include-Guard
+# (the randomizer code is taken directly from TextMate; it could probably be
+# cleaner, I don't know how to do it in vim script)
+snippet once
+	#ifndef ${1:`toupper(Filename('', 'UNTITLED').'_'.system("/usr/bin/ruby -e 'print (rand * 2821109907455).round.to_s(36)'"))`}
+
+	#define $1
+
+	${2}
+
+	#endif /* end of include guard: $1 */
+# If Condition
+snippet if
+	if (${1:/* condition */}) {
+		${2:/* code */}
+	}
+snippet el
+	else {
+		${1}
+	}
+# Tertiary conditional
+snippet tc
+	${1:/* condition */} ? ${2:a} : ${3:b}
+# Do While Loop
+snippet do
+	do {
+		${2:/* code */}
+	} while (${1:/* condition */});
+# While Loop
+snippet wh
+	while (${1:/* condition */}) {
+		${2:/* code */}
+	}
+# For Loop
+snippet for
+	for (${2:i} = 0; $2 < ${1:count}; $2${3:++}) {
+		${4:/* code */}
+	}
+# Custom For Loop
+snippet forr
+	for (${1:i} = ${2:0}; ${3:$1 < 10}; $1${4:++}) {
+		${5:/* code */}
+	}
+# Function
+snippet fun
+	${1:void} ${2:function_name}(${3})
+	{
+		${4:/* code */}
+	}
+# Function Declaration
+snippet fund
+	${1:void} ${2:function_name}(${3});${4}
+# Typedef
+snippet td
+	typedef ${1:int} ${2:MyCustomType};${3}
+# Struct
+snippet st
+	struct ${1:`Filename('$1_t', 'name')`} {
+		${2:/* data */}
+	}${3: /* optional variable list */};${4}
+# Typedef struct
+snippet tds
+	typedef struct ${2:_$1 }{
+		${3:/* data */}
+	} ${1:`Filename('$1_t', 'name')`};
+# Typdef enum
+snippet tde
+	typedef enum {
+		${1:/* data */}
+	} ${2:foo};
+# printf
+# unfortunately version this isn't as nice as TextMates's, given the lack of a
+# dynamic `...`
+snippet pr
+	printf("${1:%s}\n"${2});${3}
+# fprintf (again, this isn't as nice as TextMate's version, but it works)
+snippet fpr
+	fprintf(${1:stderr}, "${2:%s}\n"${3});${4}
+snippet .
+	[${1}]${2}
+snippet un
+	unsigned
+
+snippet po
+	#pragma once
+#snippet ReadRegister
+#	WCHAR szPath[MAX_PATH] = {0};
+#	DWORD dwSize = ARRAYSIZE(szPath);
+#	HKEY hKey = NULL;
+#	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Polycom", 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+#	{
+#		AutoCloseHKEY autoCloseKey(hKey);
+#		if (RegQueryValueEx(autoCloseKey, L"SaveImageFolder", NULL, NULL, (UCHAR*)szPath, (LPDWORD)&dwSize) == ERROR_SUCCESS)
+#		{
+#			m_debugImageFolder = szPath;
+#		}
+#	}
+
+snippet MacGetSystemTime
+	#include <sys/time.h>
+	long getSystemTime()
+	{
+		timeval time;
+		gettimeofday(&time, NULL);
+		long millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+		return millis;
+	}
+snippet WinGetSystemTime
+	// Got system time by ms
+	long getSystemTime()
+	{
+		SYSTEMTIME systemTime;
+		GetSystemTime( &systemTime );
+		FILETIME fileTime;
+		SystemTimeToFileTime( &systemTime, &fileTime );
+		ULARGE_INTEGER uli;
+		uli.LowPart = fileTime.dwLowDateTime; // could use memcpy here!
+		uli.HighPart = fileTime.dwHighDateTime;
+		return uli.QuadPart/10000;
+	}
+
+snippet accessfile
+	sequenceFile("/mnt/sdcard/file.pcm", std::ios_base::binary)
+	_referenceDataFile = fopen("/mnt/sdcard", "wb");
+	fclose(_referenceDataFile);
+	int writeSize = fwrite(data, sizeof(short), sampleNum, file);
+	sequenceFile << "proccessing data"  << std::endl;
+	int readSize = (int)fread(data, sizeof(short), bufferSizeSampleNum, file);
+
+snippet TimeCounter
+	class CTimeCounter
+	{
+		public:
+			CTimeCounter()
+			:m_beginTime(0),
+			 m_endTime(0)
+			{
+				m_beginTime = getSystemTime();
+			}
+			~CTimeCounter()
+			{
+				m_endTime = getSystemTime();
+				printf("Using %d millian seconds\n", m_endTime - m_beginTime);
+			}
+		private:
+			long m_beginTime;
+			long m_endTime;
+	};
+
+snippet LogI
+	MpcLog(LOG_INFO,"%s: %d ${1:message}",__FUNCTION__,__LINE__);
+
+snippet LogW
+	MpcLog(LOG_WARNING,"%s: %d ${1:message}",__FUNCTION__,__LINE__);
+
+snippet LogE
+	MpcLog(LOG_ERROR,"%s: %d ${1:message}",__FUNCTION__,__LINE__);
+snippet t
+	this->

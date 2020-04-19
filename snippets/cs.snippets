@@ -1,0 +1,334 @@
+# The c.snippet will be loaded automatically for cs/cpp/objectc file.
+
+# Attribute
+snippet <s
+	/// <summary>
+	/// ${1:comments}
+	/// </summary>
+snippet <p
+	/// <param name="${1:name}">${2:description}</param>
+
+snippet <r
+	/// <returns>${1:description}</returns>
+snippet debugex
+	int tmp${1:`Choose(1000)`}=0; if (tmp$1==0) { throw new PartnerException();}
+snippet debugreturn
+	int tmp${1:`Choose(1000)`}=0; if (tmp$1==0) { return; }
+snippet ie
+	Util.IsNullOrEmpty(${1:varname})
+snippet iu
+	Util.IsNullOrUndefined(${1:varname})
+snippet se
+	String.IsNullOrUndefined(${1:varname})
+snippet domh
+		DomEvent.AddHandler(${1:this.element}, EventNames.${2:Click}, ${3:clickHandler});
+snippet domd
+		${1:this.clickHandler} = delegate(DomEvent e)
+		{
+			${2:/*code*/}
+		};
+snippet i
+	IgnoreNamespace
+snippet p
+	[PreserveCase]
+snippet config
+	ConfigManager.GetSetting<${1:string}>("${2:configName}")
+snippet d.a
+	Debug.Assert(${1:true}, ${2:msg});
+#`AddNameSpace("us.d")`
+#snippet as
+#	Debug.Assert(${1:test} , "${2:Failure message}");
+snippet loge
+	Wpp.TraceEvent(Wpp.TL_ERROR, Wpp.TF_COMPONENT, Log.GetCorrelationID(), "${1}");
+snippet logw
+	Wpp.TraceEvent(Wpp.TL_VERBOSE, Wpp.TF_COMPONENT, Log.GetCorrelationID(), "${1}");
+snippet logi
+	Wpp.TraceEvent(Wpp.TL_INFO, Wpp.TF_COMPONENT, Log.GetCorrelationID(), "${1}");
+snippet ex
+	throw new InternalException(Log.UNTAGGED, PortalErrorCodes.ErrorCode.Unknown, "${1}", LogLevel.Error);
+
+snippet tb
+	var oldTime = DateTime.Now;
+
+snippet te
+	var newTime${1:`Choose(1000)`} = DateTime.Now;
+	var takeTime$1 = (newTime$1 - oldTime).TotalMilliseconds;
+	LogManager.Debug("Using time {0} for id `Choose(1000)`", takeTime$1);
+snippet thread
+	Thread ${1:thread} = new Thread(${2:ThreadProc});
+	$1.Start();
+	void $2()
+	{
+	}
+snippet timer
+	var ${1:_timer} = new DispatcherTimer();
+	$1.Interval = new TimeSpan(0, 0, 0, ${2:1000});
+	$1.Tick += new EventHandler(${3:Time_Tick});
+	$1.Start();
+	void $3(object sender, EventArgs e)
+	{
+		$1.Stop();
+	}
+
+# Empty property
+snippet eproperty
+	/// <summary>
+	/// ${3:comments}
+	/// </summary>
+	public ${1:type} ${2:name} { get; set; }
+snippet property
+	/// <summary>
+	/// ${4:comments}
+	/// </summary>
+	private ${1:type} ${2:name};
+	public $1 ${3:Name}
+	{
+		get
+		{
+			return this.$2;
+		}
+		set
+		{
+			this.$2= value;
+		}
+	}
+
+snippet set
+	set
+	{
+		${1} = value;
+	}
+
+snippet get
+	get
+	{
+		return ${1};
+	}
+# aspx event
+snippet aspevent
+	/// <summary>
+	/// Set the page title and register the script.
+	/// </summary>
+	/// <param name="e"></param>
+	protected override void ${1:OnPreRender}(EventArgs e)
+	{
+		base.$1(e);
+	}
+snippet RenderChildren
+	///<summary>
+	/// Render help link or publish the link
+	/// </summary>
+	protected override void RenderChildren(HtmlTextWriter writer)
+	{
+		base.RenderChildren(writer);
+	}
+# Render html
+snippet Ra
+	writer.AddAttribute(HtmlTextWriterAttribute.${1:Width}, ${2:"0"});
+snippet Rb
+	writer.RenderBeginTag(HtmlTextWriterTag.${1:Div});
+snippet Re
+	writer.RenderEndTag(); //Div
+
+snippet na
+	namespace
+snippet um.e
+	using Microsoft.Rtc.Management.Lcp.Util.Exceptions;
+snippet um.l
+	using Microsoft.Rtc.Management.Lcp.Util.Logging;
+snippet um.c
+	using Microsoft.Rtc.Management.Lcp.Common;
+snippet sm.i
+	using Microsoft.Rtc.Management.Lcp.Providers.Identity;
+snippet um.s
+	using Microsoft.Rtc.Management.Lcp.Common.ScriptSharp;
+snippet um.u
+	using Microsoft.Rtc.Management.Lcp.Util;
+snippet um.p
+	using Microsoft.Rtc.Management.Lcp.Providers;
+snippet us.g
+	using System.Collections.Generic;
+snippet us.o
+	using System.Collections.ObjectModel;
+snippet us.d
+	using System.Diagnostics;
+snippet us.l
+	using System.Linq;
+snippet us.u
+	using System.Web.UI;
+snippet us.w
+	using System.Web;
+snippet uaj
+	using AjaxControlToolkit;
+snippet us.t
+	using System.Windows.Threading;
+	using System.Threading;
+snippet pu
+	public
+snippet po
+	protected
+snippet pr
+	private
+snippet st
+	static
+snippet fi
+	final
+snippet ab
+	abstract
+snippet re
+	return
+snippet br
+	break
+snippet de
+	default:
+		${1}
+snippet ca
+	catch(${1:Exception} ${2:e}) ${3}
+snippet th
+	throw 
+snippet sy
+	synchronized
+
+# If Condition
+snippet if
+	if (${1:/* condition */})
+	{
+		${2:/* code */}
+	}
+snippet el
+	else
+	{
+		${1}
+	}
+snippet foreach
+	foreach (var temp in ${1:collection})
+	{
+		${2}
+	}
+# Do While Loop
+snippet do
+	do
+	{
+		${2:/* code */}
+	} while (${1:/* condition */});
+# While Loop
+snippet wh
+	while (${1:/* condition */})
+	{
+		${2:/* code */}
+	}
+# For Loop
+snippet for
+	for (${2:i} = 0; $2 < ${1:count}; $2${3:++})
+	{
+		${4:/* code */}
+	}
+# Custom For Loop
+snippet forr
+	for (${1:i} = ${2:0}; ${3:$1 < 10}; $1${4:++})
+	{
+		${5:/* code */}
+	}
+
+snippet try
+	try
+	{
+	}
+	catch(Exception e)
+	{
+	}
+snippet tryf
+	try
+	{
+	}
+	catch(Exception e)
+	{
+	}
+	finally
+	{
+	}
+snippet str.eq
+	Equals("abcd", StringComparison.InvariantCultureIgnoreCase)
+
+# Function
+snippet fun
+	/// <summary>
+	/// ${1:description}
+	/// </summary>
+	${2:public} ${2:void} ${3:function_name}(${4})
+	{
+		${5:/* code */}
+	}
+# Function Declaration
+snippet fund
+	${1:public} ${2:void} ${3:function_name}(${4});${5}
+
+# Typdef enum
+snippet tc
+	public class ${1:`Filename()`} extends ${2:TestCase}
+snippet cl
+	class ${1:`Filename("", "untitled")`} ${2}
+snippet in
+	interface ${1:`Filename("", "untitled")`} ${2:extends Parent}${3}
+snippet m
+	${1:void} ${2:method}(${3}) ${4:throws }${5}
+snippet co
+	static public final ${1:String} ${2:var} = ${3};${4}
+snippet cos
+	static public final String ${1:var} = "${2}";${3}
+
+# for expand with register
+snippet if_reg
+	if (${1:/* condition */})
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	}
+snippet el_reg
+	else
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	}
+snippet foreach_reg
+	foreach (var temp in ${1:collection})
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	}
+# Do While Loop
+snippet do_reg
+	do
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	} while (${1:/* condition */});
+# While Loop
+snippet wh_reg
+	while (${1:/* condition */})
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	}
+# For Loop
+snippet for_reg
+	for (${2:i} = 0; $2 < ${1:count}; $2${3:++})
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	}
+# Custom For Loop
+snippet forr_reg
+	for (${1:i} = ${2:0}; ${3:$1 < 10}; $1${4:++})
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	}
+snippet try_reg
+	try
+	{
+	`Indent(RemoveIndent(@"), "\t")`
+	}
+	catch(${1:PartnerException} e)
+	{
+		${2:Wpp.Exception(e)}
+	}
+	finally
+	{
+		${3:/*finally code*/}
+	}
+snippet t
+	this.

@@ -1,0 +1,20 @@
+# Global snippets
+
+# (c) holds no legal value ;)
+snippet c)
+	`&enc[:2] == "utf" ? "©" : "(c)"` Copyright `strftime("%Y")` ${1:`g:snips_author`}. All Rights Reserved.${2}
+snippet date
+	`strftime("%Y-%m-%d")`
+# added by zijing to support generate guid
+snippet guid
+	`substitute(system("uuidgen"), "[ \r\n]", "", "gie")`
+snippet fh
+	//-----------------------------------------------------------------------
+	// <copyright file="${1:`Filename()`}" company="Polycom" author="asia\zjwu">
+	//     Copyright (c) Polycom. All rights reserved.
+	// </copyright>
+	//-----------------------------------------------------------------------
+
+snippet sc
+	// Skip check-in
+
