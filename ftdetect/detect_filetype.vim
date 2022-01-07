@@ -8,6 +8,7 @@ au BufNewFile,BufRead *.aspx set filetype=aspx
 au BufNewFile,BufRead *.ascx set filetype=aspx
 au BufNewFile,BufRead *.master set filetype=aspx
 au BufNewFile,BufRead *.xaml set filetype=xaml
+au BufNewFile,BufRead *.ui set filetype=xml
 "detect if it is cpp/objc/objcppPath
 au BufNewFile,BufRead *.h call s:DetectHeader()
     
