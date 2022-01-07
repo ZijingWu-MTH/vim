@@ -14,17 +14,17 @@ snippet map
 snippet vector
 	std::vector<${1:int}> v${2};
 snippet forv
-	for (std::vector<${1:int}>::const_iterator it = ${2:var}.begin(); it != $2.end(); it++)
+	for (auto it = ${2:var}.begin(); it != $2.end(); it++)
 	{
 		${3:/* code */}
 	}
 snippet fors
-	for (std::set<${1:int}>::const_iterator it = ${2:var}.begin(); it != $2.end(); it++) 
+	for (auto it = ${2:var}.begin(); it != $2.end(); it++) 
 	{
 		${3:/* code */}
 	}
 snippet form
-	for (std::map<${1:int}, ${2:string}>::iterator it = ${3:var}.begin(), it ! = $3.end(); it++)
+	for (auto it = ${3:var}.begin(), it ! = $3.end(); it++)
 	{
 		// it->first.f();
 	}
