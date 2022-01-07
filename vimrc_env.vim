@@ -10,6 +10,7 @@
 "nmake -f Make_mvc.mak 
 " 3. replace the vim.exe with the build output.
 
+
 if !has('python')
     echo "Error: Required vim compiled with +python"
     finish
@@ -33,7 +34,11 @@ highlight Search ctermfg=Black ctermbg=Yellow cterm=NONE
 
 "source $VIMRUNTIME/../base64.vim
 autocmd FileType make setlocal noexpandtab
-execute "filetype on"
+
+filetype on
+filetype plugin on
+filetype indent on
+
 set complete-=i
 set foldmethod=indent foldlevel=4
 
@@ -302,19 +307,19 @@ endfunction
 function RenameLocalSym()
     normal mA
     let currentFileName = expand("%")
-    let a:name = input("rename to:")
-    if (a:name == "")
+    let name = input("rename to:")
+    if (name == "")
         return
     endif
-    let a:word = expand("<cword>")
-    exec ":%s/\\<" . a:word . "\\>/" . a:name . "/gce"
+    let word = expand("<cword>")
+    exec ":%s/\\<" . word . "\\>/" . name . "/gce"
 
     "search alternative file to rename variables.
     while (AlternativeFile())
         if (expand("%") == currentFileName)
             break
         endif
-        exec ":%s/\\<" . a:word . "\\>/" . a:name . "/gce"
+        exec ":%s/\\<" . word . "\\>/" . name . "/gce"
     endwhile
     normal 'A
 endfunction
