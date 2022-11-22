@@ -1,46 +1,124 @@
-# Swift file type plugin for Vim
+# Dart Support for Vim
 
-This is a [Vim][] file type plugin for the [Swift][] programming language.
+dart-vim-plugin provides filetype detection, syntax highlighting, and
+indentation for [Dart][] code in Vim.
 
-[Vim]: http://www.vim.org
-[Swift]: https://developer.apple.com/swift/
+Looking for auto-complete, diagnostics as you type, jump to definition and other
+intellisense features? Try a vim plugin for the
+[Language Server Protocol](http://langserver.org/) such as [vim-lsc][]
+configured to start the Dart analysis server with the `--lsp` flag.
 
-## Features
+Looking for an IDE experience? See the [Dart Tools][] page.
 
-* Full syntax coloring for Swift (including support for folding).
-* Helper commands for running Swift scripts and printing various compilation
-  stages, including LLVM IR and assembly.
-* Full support for compiling/running iOS scripts using the iOS Simulator.
-* Supports multiple installations of Xcode.
+[Dart]: https://dart.dev/
+[Dart tools]: https://dart.dev/tools
+[vim-lsc]: https://github.com/natebosch/vim-lsc
 
-See [`:help ft-swift`][swift.txt] for more details.
+## Commands
 
-[swift.txt]: https://github.com/kballard/vim-swift/blob/master/doc/swift.txt
+### :DartFmt
+
+![](https://raw.github.com/dart-lang/dart-vim-plugin/master/DartFmt.gif)
 
 ## Installation
 
-Install this plugin with your Vim plugin manager of choice.
+Install as a typical vim plugin using your favorite approach. If you don't have
+a preference [vim-plug][] is a good place to start. Below are examples for
+common choices, be sure to read the docs for each option.
 
-### [NeoBundle][]
+### [vim-plug][]
 
-[NeoBundle]: https://github.com/Shougo/neobundle.vim
+[vim-plug]: https://github.com/junegunn/vim-plug
 
-Add the following to your `.vimrc`:
+```vimscript
+call plug#begin()
+"... <snip other plugins>
+Plug 'dart-lang/dart-vim-plugin'
 
-```vim
-NeoBundle 'kballard/vim-swift', {
-        \ 'filetypes': 'swift',
-        \ 'unite_sources': ['swift/device', 'swift/developer_dir']
-        \}
+call plug#end()
 ```
 
-### [Pathogen][]
+Then invoke `:PlugInstall` to install the plugin.
 
-[Pathogen]: https://github.com/tpope/vim-pathogen
+### [pathogen][]
 
-Run the following commands in your terminal:
+[pathogen]: https://github.com/tpope/vim-pathogen
+
+Clone the repository into your pathogen directory.
 
 ```sh
-cd ~/.vim/bundle
-git clone https://github.com/kballard/vim-swift.git
+mkdir -p ~/.vim/bundle && cd ~/.vim/bundle && \
+git clone https://github.com/dart-lang/dart-vim-plugin
 ```
+
+Ensure your `.vimrc` contains the line `execute pathogen#infect()`
+
+### [vundle][]
+
+[vundle]: https://github.com/VundleVim/Vundle.vim
+
+```vimscript
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+"... <snip other plugins>
+Plugin 'dart-lang/dart-vim-plugin'
+
+call vundle#end()
+```
+
+## Configuration
+
+Enable HTML syntax highlighting inside Dart strings with `let
+dart_html_in_string=v:true` (default false).
+
+Highlighting for specific syntax groups can be disabled by defining custom
+highlight group links. See `:help dart-syntax`
+
+Enable Dart style guide syntax (like 2-space indentation) with
+`let g:dart_style_guide = 2`
+
+Enable DartFmt execution on buffer save with `let g:dart_format_on_save = 1`
+
+Configure DartFmt options with `let g:dartfmt_options`
+(discover formatter options with `dartfmt -h`)
+
+## FAQ
+
+### Why doesn't the plugin indent identically to `dart format`?
+
+The indentation capabilities within vim are limited and it's not easy to fully
+express the indentation behavior of `dart format`. The major area where this
+plugin differs from `dart format` is indentation of function arguments when
+using a trailing comma in the argument list. When using a trailing comma (as is
+common in flutter widget code) `dart format` uses 2 space indent for argument
+parameters. In all other indentation following an open parenthesis (argument
+lists without a trailing comma, multi-line assert statements, etc) `dart format`
+uses 4 space indent. This plugin uses 4 space indent indent by default. To use 2
+space indent by default, `let g:dart_trailing_comma_indent = v:true`.
+
+
+### How do I configure an LSP plugin to start the analysis server?
+
+The Dart SDK comes with an analysis server that can be run in LSP mode. The
+server ships with the SDK. Assuming the `bin` directory of the SDK is at
+`$DART_SDK` the full command to run the analysis server in LSP mode is
+`$DART_SDK/dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp`. If
+you'll be opening files outside of the `rootUri` sent by your LSP client
+(usually `cwd`) you may want to pass `onlyAnalyzeProjectsWithOpenFiles: true` in
+the `initializationOptions`. See the documentation for your LSP client for how
+to configure initialization options. If you are using the [vim-lsc][] plugin
+there is an additional plugin which can configure everything for you at
+[vim-lsc-dart][]. A minimal config for a good default experience using
+[vim-plug][] would look like:
+
+```vimscript
+call plug#begin()
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'natebosch/vim-lsc'
+Plug 'natebosch/vim-lsc-dart'
+call plug#end()
+
+let g:lsc_auto_map = v:true
+```
+
+[vim-lsc-dart]: https://github.com/natebosch/vim-lsc-dart
