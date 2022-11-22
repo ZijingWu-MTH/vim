@@ -1,0 +1,17 @@
+build.log
+compile_flags.txt
+.DS_Store
+.vscode
+.workspace.vim
+*.swp
+*.pdb
+*.un~
+.*_obj
+.*_src
+.obj
+.dart_tool
+_last_edit_file_
+last_edit_file.txt
+fuf
+_backup_
+
