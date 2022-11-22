@@ -27,6 +27,8 @@ set clipboard=unnamed
 
 " disable the beep which does goes to system mic instead of USB headset on mac.
 set noeb vb t_vb=
+let g:swift_suppress_showmatch_warning = 1
+
 
 highlight Pmenu ctermbg=238 gui=bold
 highlight PmenuSel ctermbg=200 gui=bold
