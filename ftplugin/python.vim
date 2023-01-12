@@ -1,5 +1,6 @@
 iab \|\| or
 iab && and
-iab ! not
 iab true True
-iab false True
+iab false False
+iab _true true
+iab _false false
