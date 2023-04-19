@@ -11,8 +11,8 @@
 " 3. replace the vim.exe with the build output.
 
 
-if !has('python')
-    echo "Error: Required vim compiled with +python"
+if !has('python3')
+    echo "Error: Required vim compiled with +python3"
     finish
 endif
 
@@ -145,7 +145,7 @@ function SearchText(defaultText)
 
     let currentFolder = getcwd() 
     let pyScirpt = shellescape(JoinPath($myEnvFolder, "search_service.py"))
-    let result = system("python " . pyScirpt . " " . shellescape(text))
+    let result = system("python3 " . pyScirpt . " " . shellescape(text))
     if (Trim(result) == "")
        "TODO by zijwu print the first 2 line
        echo "Result find."
@@ -381,7 +381,7 @@ endfunction
 
 function ReverseLine()
     let a:regularExpr = input("Using (<pattern>) to include the pattern self, and you doesn't need escape:")
-    execute "'<,'>!python $myEnvFolder/reverse_words.py \"" . a:regularExpr . "\""
+    execute "'<,'>!python3 $myEnvFolder/reverse_words.py \"" . a:regularExpr . "\""
 endfunction
 
 function SaveReg(fileName)
@@ -538,7 +538,7 @@ if (has("mac") || has("unix"))
 else
     set tag=%ROOT%\mytags
 endif
-python << EOF
+python3 << EOF
 import os
 import vim
 import md5
@@ -566,7 +566,7 @@ if (not "_backup" in rootVariable):
     vim.command("set backup")
 EOF
 
-cabbrev wc w<CR>:!python $myEnvFolder/fly_check.py  %:p
+cabbrev wc w<CR>:!python3 $myEnvFolder/fly_check.py  %:p
 nnoremap <leader>cr :!taskkill /F /IM olyncsubmit.exe & rd /s /q \%userprofile\%\\olyncsubmit & robocopy /e  \%userprofile\%\\olyncsubmit_\%_PROJECT_\% \%userprofile\%\\olyncsubmit & \\\\OCGCFILE1\\Public\\yuboxie\\OLyncSubmit\\public\\Launcher\\OLyncSubmitLauncher.exe
 nnoremap <leader>ie :silent !perl \%INIT\%\\launchexe.pl IE<CR>
 nnoremap <leader>sf :silent !perl \%INIT\%\\launchexe.pl Safari<CR>
@@ -598,7 +598,7 @@ let g:haddock_docdir= $programfiles . "\\Haskell Platform\\2012.2.0.0\\doc\\html
 " Disable it because it need ruby.
 let g:loaded_cpp_auto_include = "true"
 
-" auto import the python module.
+" auto import the python3 module.
 let g:PythonAutoAddImports = 0
 
 
@@ -769,7 +769,7 @@ if ($REMOTE_SHELL == "" || $REMOTE_SHELL_PORT == "")
         map <F7> :silent !explorer "http://www.google.com.hk/search?q=<C-R><C-W>"<CR>
     endif
 else
-    map <F7> :!python $myEnvFolder/remote_command_agent.py  openurl http://www.google.com.hk/search?q=<C-R><C-W><CR>
+    map <F7> :!python3 $myEnvFolder/remote_command_agent.py  openurl http://www.google.com.hk/search?q=<C-R><C-W><CR>
 endif
 
 map <F8> :call Go_though_all_diff()<CR>
@@ -790,8 +790,8 @@ map <leader>df :call VersionDiff()<CR>
 map <leader>da :!start cmd /c windiff -lo ...<CR>
 " for rf, we should not too smart and try to find it in filelist, we may got
 " revert wrong file.
-map <leader>rf :!python $myEnvFolder/source_control_util.py -a revert_local -f <C-R>=NormalizeFilePath(expand("<cfile>"))<CR><CR>
-map <leader>rv :setlocal autoread<CR>:!python $myEnvFolder/source_control_util.py -a revert_local -f %<CR>
+map <leader>rf :!python3 $myEnvFolder/source_control_util.py -a revert_local -f <C-R>=NormalizeFilePath(expand("<cfile>"))<CR><CR>
+map <leader>rv :setlocal autoread<CR>:!python3 $myEnvFolder/source_control_util.py -a revert_local -f %<CR>
 map <leader>ol :silent !sd online %<CR> 
 map <leader>sy :silent !sd sync %<CR> 
 
@@ -847,19 +847,19 @@ map <leader>bg :!echo<CR>
 map <leader>sh :shell<CR>
 map <leader>ru :silent !cmd /c start %:p<CR>
 "remove header
-map <leader>rh :execute "!python \"$myEnvFolder\"/update_func_header.py % remove " . line('.')<CR>
+map <leader>rh :execute "!python3 \"$myEnvFolder\"/update_func_header.py % remove " . line('.')<CR>
 "add header
-map <leader>ah :execute "!python \"$myEnvFolder\"/update_func_header.py % add " . line('.')<CR>
+map <leader>ah :execute "!python3 \"$myEnvFolder\"/update_func_header.py % add " . line('.')<CR>
 
 if (has("mac") || has("unix"))
     "redraw it on mac, because the vim has a bug of not refresh screen after execute external command
     map <leader>ex :silent !open %:h<CR>:redraw!<CR>
-    map <leader>bk :silent !python "$VIMRUNTIME"/../PerlTools/file_backup_service.py % backup<CR>
-    map <leader>rs :silent !python "$VIMRUNTIME"/../PerlTools/file_backup_service.py % restore<CR>
+    map <leader>bk :silent !python3 "$VIMRUNTIME"/../PerlTools/file_backup_service.py % backup<CR>
+    map <leader>rs :silent !python3 "$VIMRUNTIME"/../PerlTools/file_backup_service.py % restore<CR>
 else
     map <leader>ex :silent !cmd /c start %:h<CR>
-    map <leader>bk :silent !python "\%VIMRUNTIME\%"\..\PerlTools\file_backup_service.py % backup<CR>
-    map <leader>rs :silent !python "\%VIMRUNTIME\%"\..\PerlTools\file_backup_service.py % restore<CR>
+    map <leader>bk :silent !python3 "\%VIMRUNTIME\%"\..\PerlTools\file_backup_service.py % backup<CR>
+    map <leader>rs :silent !python3 "\%VIMRUNTIME\%"\..\PerlTools\file_backup_service.py % restore<CR>
 endif
 
 "for auto close. we doesn't auto complete "]" to let the auto complete [] for objective-c works.
@@ -870,7 +870,7 @@ map <leader>rn :call RenameLocalSym()<CR>
 " set the minimaize the indent
 map <leader>mi :set shiftwidth=2<CR>:set tabstop=2<CR>
 " partial revert (conflit with perl run).
-map <leader>plr :call CopyFile(expand("%"), expand("%").".bak")<CR>:setlocal autoread<CR>:silent !!python \"$myEnvFolder\"/source_control_util.py revert_local %:p<CR>:vertical diffsplit %.bak<CR>
+map <leader>plr :call CopyFile(expand("%"), expand("%").".bak")<CR>:setlocal autoread<CR>:silent !!python3 \"$myEnvFolder\"/source_control_util.py revert_local %:p<CR>:vertical diffsplit %.bak<CR>
 
 "Surround p with {
 nnoremap <leader>sp :call RemoveTailSpace()<CR>j1{o{<ESC>lx1}i}<ESC>o<ESC>k>i}1{
@@ -1072,11 +1072,11 @@ autocmd BufNewFile *.pl :r $VIMRUNTIME\..\vimfiles\skeleton\perl.skeleton | norm
 
 autocmd BufEnter *.hs :set makeprg=ghc\ %
 
-autocmd BufEnter *.py :set equalprg=python\ $myEnvFolder/tools/PythonTidy/PythonTidy.py
+autocmd BufEnter *.py :set equalprg=python3\ $myEnvFolder/tools/PythonTidy/PythonTidy.py
 autocmd BufWritePre * call MyRollingBackup()
 
 function! MyRollingBackup()
-python << EOF
+python3 << EOF
 import os
 import vim
 import md5
@@ -1087,6 +1087,7 @@ import ConfigManager
 
 #By default val
 rootVariable = util.getEnv('ROOT')
+print(rootVariable)
 if (not rootVariable or rootVariable == ""):
     rootVariable = vim.eval("expand(\"%:p:h\")")
 rootVariable = rootVariable.replace("\\", "/")
@@ -1095,10 +1096,12 @@ rootVariable = vim.eval("$ROOT");
 
 if (not "_backup" in rootVariable):
     backupFolder = os.path.join(os.path.join(rootVariable, ".."), "_backup_" + os.path.basename(rootVariable) + "_" + md5.new(rootVariable).hexdigest())
+    backupFolder = os.path.normpath(backupFolder)
     if (not os.path.exists(backupFolder)):
         os.makedirs(backupFolder)
     currentFilePath = vim.eval("expand(\"%:p\")")
     currentFileName = vim.eval("expand(\"%\")")
+    currentFileName = os.path.basename(currentFileName)
     backupMetaFile = os.path.join(backupFolder, currentFileName + ".backup_meta")
     lastBackupIndex = -1 
     lines = []
@@ -1246,7 +1249,7 @@ endfunction
 function VersionDiff()
     let launchDiffScriptPath = JoinPath($myEnvFolder, "launch_diff.py")
     if expand("%") !~ "svn.log"
-        execute "silent !python " . shellescape(launchDiffScriptPath) . " " . expand("%:p")
+        execute "silent !python3 " . shellescape(launchDiffScriptPath) . " " . expand("%:p")
     else
         let targetFileName = substitute(expand("%:p"), ".svn.log", "", "g") 
         let line = line(".")
@@ -1265,7 +1268,7 @@ function VersionDiff()
         if (versionNum == -1)
             return
         endif
-        execute "silent !python " . shellescape(launchDiffScriptPath) . " " targetFileName . " " . versionNum
+        execute "silent !python3 " . shellescape(launchDiffScriptPath) . " " targetFileName . " " . versionNum
     endif
 endfunction
 
@@ -1385,7 +1388,7 @@ endfunction
 " if there isn't one, append a semi colon to the end of the current line.
 function s:appendsemicolon()
     let original_cursor_position = getpos('.')
-    " for python, we append : instead.
+    " for python3, we append : instead.
     if &ft == "python"
         if getline('.') !~ ':$'
             exec("s/$/:/")
