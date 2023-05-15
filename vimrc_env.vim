@@ -1,4 +1,4 @@
-"How to build vim with python
+"Hot to build vim with python
 " 1. install the vim74 by download the binary, which by default doesn't have PYTHON support.
 " 2. Using the VS2012 on windows, execute following commands, more variable than PYTHON can be find in Make_mvc.mak
 "call "c:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools\vsvars32.bat"
@@ -29,6 +29,7 @@ set clipboard=unnamed
 set noeb vb t_vb=
 let g:swift_suppress_showmatch_warning = 1
 
+let g:loaded_taglist = 'no'
 
 highlight Pmenu ctermbg=238 gui=bold
 highlight PmenuSel ctermbg=200 gui=bold
@@ -538,16 +539,18 @@ if (has("mac") || has("unix"))
 else
     set tag=%ROOT%\mytags
 endif
+
 python3 << EOF
 import os
 import vim
-import md5
+import hashlib
 sys.path.append(os.environ['myEnvFolder'])
 import util
 import ConfigManager
 
 #By default val
 rootVariable = util.getEnv('ROOT')
+rootVariable = os.path.normpath(rootVariable)
 if (not rootVariable or rootVariable == ""):
     rootVariable = vim.eval("expand(\"%:p:h\")")
 rootVariable = rootVariable.replace("\\", "/")
@@ -559,7 +562,8 @@ hasUnix = vim.eval("has(\"unix\")");
 vim.command("set tag='" + os.path.join(rootVariable, "mytags") + "'");
 
 if (not "_backup" in rootVariable):
-    backupFolder = os.path.join(os.path.join(rootVariable, ".."), "_backup_" + os.path.basename(rootVariable) + "_" + md5.new(rootVariable).hexdigest())
+    backupFolder = os.path.join(os.path.join(rootVariable, ".."), 
+            "_backup_" + os.path.basename(rootVariable) + "_" + hashlib.md5(rootVariable.encode("utf-8")).hexdigest())
     if (not os.path.exists(backupFolder)):
         os.makedirs(backupFolder)
     vim.command("set backupdir=" + backupFolder + ",.")
@@ -1079,7 +1083,7 @@ function! MyRollingBackup()
 python3 << EOF
 import os
 import vim
-import md5
+import hashlib
 import shutil
 sys.path.append(os.environ['myEnvFolder'])
 import util
@@ -1087,7 +1091,7 @@ import ConfigManager
 
 #By default val
 rootVariable = util.getEnv('ROOT')
-print(rootVariable)
+rootVariable = os.path.normpath(rootVariable)
 if (not rootVariable or rootVariable == ""):
     rootVariable = vim.eval("expand(\"%:p:h\")")
 rootVariable = rootVariable.replace("\\", "/")
@@ -1095,7 +1099,7 @@ vim.command("let $ROOT='" + rootVariable + "'")
 rootVariable = vim.eval("$ROOT");
 
 if (not "_backup" in rootVariable):
-    backupFolder = os.path.join(os.path.join(rootVariable, ".."), "_backup_" + os.path.basename(rootVariable) + "_" + md5.new(rootVariable).hexdigest())
+    backupFolder = os.path.join(os.path.join(rootVariable, ".."), "_backup_" + os.path.basename(rootVariable) + "_" + hashlib.md5(rootVariable.encode("utf-8")).hexdigest())
     backupFolder = os.path.normpath(backupFolder)
     if (not os.path.exists(backupFolder)):
         os.makedirs(backupFolder)
@@ -1116,8 +1120,9 @@ if (not "_backup" in rootVariable):
 
     if (os.path.isfile(backupFilePath)):
         os.unlink(backupFilePath)
-    shutil.copyfile(currentFilePath, backupFilePath)
-    util.writeSmallFileAsString(backupMetaFile, util.concateLines([str(nextBackupIndex)]))
+    if (os.path.isfile(currentFilePath)):
+        shutil.copyfile(currentFilePath, backupFilePath)
+        util.writeSmallFileAsString(backupMetaFile, util.concateLines([str(nextBackupIndex)]))
 EOF
 endfunction
 
