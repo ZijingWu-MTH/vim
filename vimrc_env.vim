@@ -10,7 +10,6 @@
 "nmake -f Make_mvc.mak 
 " 3. replace the vim.exe with the build output.
 
-
 if !has('python3')
     echo "Error: Required vim compiled with +python3"
     finish
