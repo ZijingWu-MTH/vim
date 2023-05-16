@@ -11,8 +11,13 @@
 " 3. replace the vim.exe with the build output.
 
 
+<<<<<<< Updated upstream
 if !has('python3')
     echo "Error: Required vim compiled with +python3"
+=======
+if !has('python') && !has('python3')
+    echo "Error: Required vim compiled with +python"
+>>>>>>> Stashed changes
     finish
 endif
 
