@@ -1,4 +1,4 @@
-"Hot to build vim with python
+"How to build vim with python3
 " 1. install the vim74 by download the binary, which by default doesn't have PYTHON support.
 " 2. Using the VS2012 on windows, execute following commands, more variable than PYTHON can be find in Make_mvc.mak
 "call "c:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools\vsvars32.bat"
@@ -538,7 +538,6 @@ if (has("mac") || has("unix"))
 else
     set tag=%ROOT%\mytags
 endif
-
 python3 << EOF
 import os
 import vim
@@ -562,7 +561,7 @@ vim.command("set tag='" + os.path.join(rootVariable, "mytags") + "'");
 
 if (not "_backup" in rootVariable):
     backupFolder = os.path.join(os.path.join(rootVariable, ".."), 
-            "_backup_" + os.path.basename(rootVariable) + "_" + hashlib.md5(rootVariable.encode("utf-8")).hexdigest())
+        "_backup_" + os.path.basename(rootVariable) + "_" + hashlib.new("md5", rootVariable.encode(encoding='UTF-8')).hexdigest())
     if (not os.path.exists(backupFolder)):
         os.makedirs(backupFolder)
     vim.command("set backupdir=" + backupFolder + ",.")
@@ -1393,7 +1392,7 @@ endfunction
 function s:appendsemicolon()
     let original_cursor_position = getpos('.')
     " for python3, we append : instead.
-    if &ft == "python"
+    if &ft == "python3"
         if getline('.') !~ ':$'
             exec("s/$/:/")
         else
