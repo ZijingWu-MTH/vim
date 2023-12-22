@@ -10,9 +10,27 @@
 "nmake -f Make_mvc.mak 
 " 3. replace the vim.exe with the build output.
 
+" has(python3) will try to find the python3 dll file, so please make sure
+" python is in %PATH% environment variable if has failed even python is build
+" with python3 supported.
 if !has('python3')
     echo "Error: Required vim compiled with +python3"
     finish
+endif
+
+if &term == "win32"
+    " INSERT mode
+    let &t_SI = "\<Esc>[6 q"
+    " REPLACE mode
+    let &t_SR = "\<Esc>[3 q"
+    " NORMAL mode
+    let &t_EI = "\<Esc>[1 q"
+    " 1 -> blinking block  闪烁的方块
+    " 2 -> solid block  不闪烁的方块
+    " 3 -> blinking underscore  闪烁的下划线
+    " 4 -> solid underscore  不闪烁的下划线
+    " 5 -> blinking vertical bar  闪烁的竖线
+    " 6 -> solid vertical bar  不闪烁的竖线
 endif
 
 set encoding=utf-8
@@ -155,8 +173,8 @@ function SearchText(defaultText)
 endfunction
 
 function GotoFile()
-    let str = NormalizeFilePath(expand("<cfile>"))
-    call FindAndOpenFile(str)
+    let fileAndLineNum = NormalizeFilePathWithLineNum(expand("<cfile>"))
+    call FindAndOpenFile(fileAndLineNum[0], fileAndLineNum[1])
 endfunction
 
 function OpenClipFileList()
@@ -187,7 +205,7 @@ function PromptForFile()
         let a:name = substitute(a:name, "*", ".*", "")
         let a:name = substitute(a:name, "?", ".", "")
         let a:name = a:name . "[^\\/]*$"
-        call FindAndOpenFile(a:name)
+        call FindAndOpenFile(a:name, -1)
     endif
 endfunction
 
@@ -206,20 +224,20 @@ function FilePathWeightCompare(filePath1, filePath2)
 endfunction
 
 " go to current file with line number
-function FindAndOpenFile(filePath)
+function FindAndOpenFile(filePath, lineNum)
     let fileListDir = FindFileInUpfolder(10, "filelist.filtered")
     if (filereadable(JoinPath($ROOT, "filelist.filtered")) && fileListDir == "")
         let fileListDir = $ROOT
     endif
+    let lineNum = a:lineNum
 
     " first try to split the path, and check if the file exist.
     let fileNameAndLineNum = split(a:filePath, "\\(:\\|(\\)\\ze\\d")
     if (filereadable(fileNameAndLineNum[0]))
         let fileName = a:filePath
-        let lineNum = -1
         if (len(fileNameAndLineNum) >= 2)
             let fileName = fileNameAndLineNum[0]
-            let lineNum = str2nr(fileNameAndLineNum[1])
+            lineNum = str2nr(fileNameAndLineNum[1])
         endif
 
         "echo fileName . lineNum
@@ -280,13 +298,55 @@ function RemoveDiffItem()
     normal kd'a
 endfunction
 
-function NormalizeFilePath(path)
+function NormalizeFilePathWithLineNum(path)
     let result = ReplaceEnvVariable(a:path)
     " git diff start with a/ or b/
     if (stridx(result, 'a/') == 0 || stridx(result, 'b/') == 0)
         let result = result[2:] 
     endif
-    return result
+
+python3 << EOF
+import os
+import vim
+import re
+path = vim.eval("result")
+pyresult = path
+lineNum = -1
+
+pattern = re.compile("^(.*)\\((\\d+)\\)")
+m = pattern.fullmatch(path)
+if (m):
+    path = m[1]
+    lineNum = m[2]
+
+pattern = re.compile("^(.*):(\\d+)")
+m = pattern.fullmatch(path)
+if (m):
+    path = m[1]
+    lineNum = m[2]
+
+# webrtc-src\webrtc_unittest\src\bwe_test_framework_unittest.cc(571): error C2059: syntax error
+index = path.find("(")
+if (index > 0):
+    path = path[0:index]
+
+maxGoUpLevel = 5
+while (not os.path.isfile(path) and not os.path.isabs(path) and maxGoUpLevel >= 0):
+    maxGoUpLevel = maxGoUpLevel - 1
+    path = os.path.join("..", path)
+
+# we found a file.
+if (maxGoUpLevel > 0):
+    pyresult = path
+vim.command(f"let pyresult = '{pyresult}'")
+vim.command(f"let lineNum = {lineNum}")
+EOF
+    return [pyresult, lineNum]
+endfunction
+
+function NormalizeFilePath(path)
+    let vals = NormalizeFilePathWithLineNum(a:path)
+    return vals[0]
 endfunction
 
 function ReplaceEnvVariable(path)
@@ -989,6 +1049,9 @@ map <leader>sd :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 map <C-=> <C-W>}
 
+map <leader>cp :call CopyPath()<CR>
+map <leader>ns :call NormalizeSlash()<CR>
+
 "find code
 map <leader>fs :call FindSym("g")<CR>
 map <leader>ft :call FindSym("t")<CR>
@@ -1077,6 +1140,36 @@ autocmd BufEnter *.hs :set makeprg=ghc\ %
 
 autocmd BufEnter *.py :set equalprg=python3\ $myEnvFolder/tools/PythonTidy/PythonTidy.py
 autocmd BufWritePre * call MyRollingBackup()
+
+function! CopyPath()
+python3 << EOF
+import os
+import pyperclip
+import vim
+import shutil
+filePath = vim.eval("expand(\"%:p\")")
+pyperclip.copy(filePath)
+EOF
+endfunction
+
+function! NormalizeSlash()
+python3 << EOF
+import os
+import pyperclip
+import vim
+import shutil
+line = vim.eval("getline('.')")
+slashCount = line.count("/")
+backSlashCount = line.count("\\")
+if (slashCount > backSlashCount):
+    line = line.replace("/", "\\")
+else:
+    line = line.replace("\\", "/")
+line = line.replace("'", "\\\\'")
+vim.eval(f"setline('.', '{line}')")
+
+EOF
+endfunction
 
 function! MyRollingBackup()
 python3 << EOF
