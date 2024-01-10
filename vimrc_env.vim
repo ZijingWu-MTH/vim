@@ -330,7 +330,7 @@ index = path.find("(")
 if (index > 0):
     path = path[0:index]
 
-maxGoUpLevel = 5
+maxGoUpLevel = 10
 while (not os.path.isfile(path) and not os.path.isabs(path) and maxGoUpLevel >= 0):
     maxGoUpLevel = maxGoUpLevel - 1
     path = os.path.join("..", path)
