@@ -1027,12 +1027,12 @@ else
 	map <leader>uc :silent cd \%ROOT\%<CR>:silent !cscope -i filelist.filtered<CR>
 endif
 
-"if (!has("unix"))
-"cs add \%ROOT\%\\cscope.out \%ROOT\%
-"else
-"cs add $ROOT\\cscope.out $ROOT
-"endif
-cs add $ROOT/cscope.out $ROOT
+""if (!has("unix"))
+""cs add \%ROOT\%\\cscope.out \%ROOT\%
+""else
+""cs add $ROOT\\cscope.out $ROOT
+""endif
+"cs add $ROOT/cscope.out $ROOT
 
 "cscope
 "Add g<C-]> g<C-\> for similar as ctags.
