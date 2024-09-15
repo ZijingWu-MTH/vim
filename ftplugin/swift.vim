@@ -14,7 +14,7 @@ set cpo&vim
 " Settings {{{1
 
 " Match Xcode default indentation settings
-setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
+setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
 " Use 80 as the text width but only format comments
 setlocal textwidth=80

@@ -816,7 +816,7 @@ map <F1> <ESC>ma10kV20j=10j'a
 " Current file
 map <F3> :clo
 
-nmap <silent> <F3> :call ToggleList("Quickfix List", 'c')<CR>
+"nmap <silent> <F3> :call ToggleList("Quickfix List", 'c')<CR>
 " using " to make < > doesn't need escape because dos
 map <F4> :grep! -R -H -n -m 5000 -I --exclude=mytags --exclude=*.err --exclude=*.wrn --exclude=*.log --exclude=*.dll --exclude=*.pdb --exclude=*.exe --exclude=*~ -e "\<<C-R><C-W>\>" *<CR>:copen<CR>
 map <F5> :grep! -R -H -n -m 5000 -I --exclude=mytags --exclude=*.err --exclude=*.wrn --exclude=*.log --exclude=*.dll --exclude=*.pdb --exclude=*.exe --exclude=*~ -e "\<<C-R><C-W>\>" *
