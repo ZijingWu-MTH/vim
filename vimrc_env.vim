@@ -75,7 +75,51 @@ if ($YCM_FOLDER != "")
    "let g:ycm_complete_in_comments = 1
 endif
 
+function! TrimTrailingSlash(path) abort
+    " Remove trailing slashes from a path while preserving root directory '/'
+    if a:path ==# '/'
+        return a:path  " Special case: keep root directory slash
+    endif
+    return substitute(a:path, '/\+$', '', '')
+endfunction
+
+"it will not care if it already contains separator
+function JoinPath(parentPath, subPath)
+    let pathSep = "\\"
+    if (has("mac") || has("unix"))
+        let pathSep = "/"
+    endif
+    return TrimTrailingSlash(a:parentPath) . pathSep . a:subPath
+endfunction
+
+
+function UndoDirPath()
+    let dirPath = JoinPath($ROOT, "_undodir_")
+    return dirPath
+endfunction
+
+function! EnsureDirExists(dir) abort
+    " Trim trailing slash for consistent checking
+    let l:dir = substitute(a:dir, '/\+$', '', '')
+    
+    if !isdirectory(l:dir)
+        " Create directory with parents (p flag) and set permissions (0700)
+        call mkdir(l:dir, 'p', 0700)
+        if !isdirectory(l:dir)
+            echoerr 'Failed to create directory: ' . l:dir
+            return 0
+        endif
+    endif
+    return 1
+endfunction
+
+let undoDir = UndoDirPath()
+call EnsureDirExists(undoDir)
+
 set undofile
+let &undodir=UndoDirPath()
+
+
 set ignorecase smartcase linebreak number autowriteall autowrite showmatch
 set history=400
 set isfname+=$,(,),%
@@ -118,15 +162,6 @@ function CopyFile(srcPath, dstPath)
     endif
 endfunction
 
-
-"it will not care if it already contains separator
-function JoinPath(parentPath, subPath)
-    let pathSep = "\\"
-    if (has("mac") || has("unix"))
-        let pathSep = "/"
-    endif
-    return a:parentPath . pathSep . a:subPath
-endfunction
 
 function! GetLastVisualSelectText()
   try
