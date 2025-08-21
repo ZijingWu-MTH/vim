@@ -40,7 +40,18 @@ syntax on
 set hlsearch
 set incsearch
 set smartcase
-set clipboard=unnamed
+
+" Use system clipboard as default register
+if has('macunix') && has('clipboard')
+    " macOS specific code
+    set clipboard=unnamed " macOS/Windows
+elseif has('win32') || has('win64')
+    " Windows specific code
+    set clipboard=unnamed " macOS/Windows
+elseif has('unix')
+    " Linux/Unix specific code
+    set clipboard=unnamedplus  " Linux
+endif
 
 " disable the beep which does goes to system mic instead of USB headset on mac.
 set noeb vb t_vb=
